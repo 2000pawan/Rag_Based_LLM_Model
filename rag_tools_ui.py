@@ -24,7 +24,7 @@ st.set_page_config(page_title="PDF Q&A Chatbot", page_icon="🧠", layout="wid
 st.title("🧠 Chat with your PDF")
 
 # -- 1️⃣ API key input -------------------------------------------------------
-api_key = "AIzaSyClBadxsB2CY5Plm_V0Lic56fP2qF9ukcA"
+api_key = st.secrets["api_keys"]["api_key"]
 
 
 # -- 2️⃣ Upload PDF ----------------------------------------------------------
