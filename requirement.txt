@@ -1,9 +1,7 @@
 streamlit
-langgraph
-langchain           0.2.1
-langchain-community 0.2.1
-langchain-google-genai 0.0.8
-faiss-cpu
-pypdf
-faiss-gpu
-
+langchain==0.2.1
+langchain-community==0.2.1
+langchain-google-genai==0.0.8
+langgraph==0.0.34
+faiss-cpu==1.7.4
+pypdf==4.2.0
