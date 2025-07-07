@@ -1,9 +1,7 @@
 streamlit
 langchain
 langgraph
-langchain_community
 langchain-google-genai
 faiss-cpu
 pypdf
 faiss-gpu
-langchain_core
