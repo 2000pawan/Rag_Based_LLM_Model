@@ -1,0 +1,12 @@
+Flask
+flask-cors
+langchain
+langchain-community
+langchain-core
+langgraph
+langchain-google-genai
+langchain-huggingface
+langchain-ollama
+faiss-cpu
+sentence-transformers
+PyPDF2
