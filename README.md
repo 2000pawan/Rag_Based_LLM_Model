@@ -56,18 +56,19 @@ Follow these steps to set up and run the project:
 ## Project Structure
 
 your_project_directory/
-├── backend/              (Optional: You might organize backend code in a subfolder)
-│   └── main.py           (Your FastAPI application code)
-│   └── rag_engine.py     (Your RAG engine logic)
-│   └── ...
-├── frontend/
-│   ├── index.html        (Frontend HTML)
-│   ├── styles.css        (Frontend CSS)
-│   ├── script.js         (Frontend JavaScript)
-│   └── ...
-├── uploads/              (Directory to store uploaded PDF files)
-├── requirements.txt      (Backend dependencies)
-└── README.md
+
+        ├── backend/              (Optional: You might organize backend code in a subfolder)
+        │   └── main.py           (Your FastAPI application code)
+        │   └── rag_engine.py     (Your RAG engine logic)
+        │   └── ...
+        ├── frontend/
+        │   ├── index.html        (Frontend HTML)
+        │   ├── styles.css        (Frontend CSS)
+        │   ├── script.js         (Frontend JavaScript)
+        │   └── ...
+        ├── uploads/              (Directory to store uploaded PDF files)
+        ├── requirements.txt      (Backend dependencies)
+        └── README.md
 
 *(Adjust the directory structure above to match your actual project organization.)*
 
