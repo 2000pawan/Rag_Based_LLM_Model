@@ -86,6 +86,12 @@ your_project_directory/
 * Implement user authentication and authorization if needed.
 * Deploy the application to a cloud platform for wider access.
 
-👤 Contact
+### 👤 Contact
+
 Name: Pawan Yadav
+
 Email: yaduvanshi2000pawan@gmail.com
+
+###📄 License
+
+This project is licensed under the MIT License.
