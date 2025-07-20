@@ -1,18 +1,17 @@
-import os
-import hashlib
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_ollama import ChatOllama
+from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.prebuilt import create_react_agent
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.tools import tool
 from langchain_core.messages import AIMessage
+from dotenv import load_dotenv
+load_dotenv()
 
-embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-llm = ChatOllama(model="llama3.1", temperature=0.8)
+embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro",temperature=0.4)
 memory = InMemorySaver()
 parser = StrOutputParser()
 
@@ -34,7 +33,8 @@ def build_agent():
     global agent
     @tool
     def rag_tool(question: str) -> str:
-        docs = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 27, "lambda_mult": 0.2}).invoke(question)
+        """Answer a question using context from the PDF."""
+        docs = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 2, "lambda_mult": 0.2}).invoke(question)
         return "\n\n".join(doc.page_content for doc in docs)
 
     agent = create_react_agent(

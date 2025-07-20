@@ -1,40 +1,48 @@
-from flask import Flask, request, jsonify, send_from_directory
-from flask_cors import CORS
+from fastapi import FastAPI, File, UploadFile, Form
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 import os
-from rag_engine import process_pdf, build_vector_index, build_agent, answer_question
+from frontend.rag_engine import process_pdf, build_vector_index, build_agent, answer_question
+from pydantic import BaseModel
 
-app = Flask(__name__)
-CORS(app)
+app = FastAPI()
+
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins - for development purposes. Restrict in production.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-@app.route("/upload", methods=["POST"])
-def upload_pdf():
-    if 'pdf' not in request.files:
-        return jsonify({"error": "No file"}), 400
-    file = request.files['pdf']
-    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(filepath)
+class QuestionRequest(BaseModel):
+    question: str
+
+@app.post("/upload")
+async def upload_pdf(pdf: UploadFile = File(...)):
+    if not pdf:
+        return JSONResponse(content={"error": "No file uploaded"}, status_code=400)
+    filepath = os.path.join(UPLOAD_FOLDER, pdf.filename)
+    with open(filepath, "wb") as f:
+        while chunk := await pdf.read(1024 * 1024):  # Read in chunks
+            f.write(chunk)
     chunks = process_pdf(filepath)
     build_vector_index(chunks)
     build_agent()
-    return jsonify({"message": "PDF processed successfully!"})
+    return JSONResponse(content={"message": "PDF processed successfully!"})
 
-@app.route("/ask", methods=["POST"])
-def ask():
-    data = request.get_json()
-    question = data.get("question")
-    answer = answer_question(question)
-    return jsonify({"answer": answer})
+@app.post("/ask")
+async def ask(question_request: QuestionRequest):
+    answer = answer_question(question_request.question)
+    return JSONResponse(content={"answer": answer})
 
-@app.route("/")
-def serve_frontend():
-    return send_from_directory("../frontend", "index.html")
-
-@app.route("/<path:path>")
-def static_proxy(path):
-    return send_from_directory("../frontend", path)
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000, debug=True)
