@@ -8,10 +8,11 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.tools import tool
 from langchain_core.messages import AIMessage
 from dotenv import load_dotenv
+import os
 load_dotenv()
-
-embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro",temperature=0.4)
+api_key = os.getenv("GOOGLE_API_KEY")
+embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key=api_key)
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro",api_key=api_key,temperature=0.4)
 memory = InMemorySaver()
 parser = StrOutputParser()
 
