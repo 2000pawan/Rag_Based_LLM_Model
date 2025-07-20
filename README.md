@@ -16,11 +16,10 @@ Follow these steps to set up and run the project:
 
 1.  **Clone the repository:** (If you haven't already)
     ```bash
-    git clone <repository_url>
-    cd <project_directory>
+    git clone https://github.com/2000pawan/Rag_Based_LLM_Model.git
     ```
 
-2.  **Navigate to the `frontend` directory and then back to the root directory:** The FastAPI application assumes the frontend files are in a directory named `frontend` in the same directory as the main Python file. The provided code snippet mounts the frontend from `G:\Coding\Git Uploads\Project\LLM\Rag_Based_LLM_Model\frontend`. Ensure you have a `frontend` directory with your HTML, CSS, and JS files at that location or adjust the `app.mount` path accordingly.
+2.  **Navigate to the `frontend` directory and then back to the root directory:** The FastAPI application assumes the frontend files are in a directory named `frontend` in the same directory as the main Python file. Uploads\Project\LLM\Rag_Based_LLM_Model\frontend`. Ensure you have a `frontend` directory with your HTML, CSS, and JS files at that location or adjust the `app.mount` path accordingly.
 
 3.  **Install backend dependencies:**
     ```bash
@@ -28,23 +27,13 @@ Follow these steps to set up and run the project:
     ```
     *(Note: You will need to create a `requirements.txt` file listing the dependencies for your backend. This would typically include `fastapi`, `uvicorn`, `pydantic`, and any libraries used in your `rag_engine.py` file such as those for PDF processing, vector databases, and LLM integration.)*
 
-4.  **Install frontend dependencies:** (If applicable, if you are using a package manager like npm or yarn)
-    ```bash
-    cd frontend
-    # npm install or yarn install
-    cd ..
-    ```
-
 ## Running the Application
 
 1.  **Run the FastAPI backend:**
     ```bash
-    python your_main_fastapi_file.py  # In this case, the file content provided is the main file
+    https://rag-llm-pawan.onrender.com/  # In this case, the file content provided is the main file
     ```
-    *(Replace `your_main_fastapi_file.py` with the actual name of the Python file containing the FastAPI application code.)*
-    The backend will typically start at `http://0.0.0.0:8000`.
 
-2.  **Open the frontend in your web browser:** Navigate to `http://localhost:8000` (or the appropriate URL if the port is different). The `app.mount` configuration in the provided code serves the frontend directly from the root path `/`.
 
 ## How to Use
 
@@ -92,6 +81,6 @@ Name: Pawan Yadav
 
 Email: yaduvanshi2000pawan@gmail.com
 
-###📄 License
+### 📄 License
 
 This project is licensed under the MIT License.
