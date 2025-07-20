@@ -41,7 +41,7 @@ async def ask(question_request: QuestionRequest):
     answer = answer_question(question_request.question)
     return JSONResponse(content={"answer": answer})
 
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+app.mount("/", StaticFiles(directory=r"G:\Coding\Git Uploads\Project\LLM\Rag_Based_LLM_Model\frontend", html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn

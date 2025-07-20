@@ -25,6 +25,7 @@ def process_pdf(path):
     chunks = RecursiveCharacterTextSplitter(chunk_size=270).create_documents([text])
     return chunks
 
+
 def build_vector_index(chunks):
     global vector_store
     vector_store = FAISS.from_documents(chunks, embedding_model)
@@ -40,7 +41,7 @@ def build_agent():
     agent = create_react_agent(
         model=llm,
         tools=[rag_tool],
-        prompt="you are a helpfull assistant. If user says hi/hello, greet politely. For other queries, use `rag_tool`. If answer not found, say you don't know.",
+        prompt="you are a helpfull assistant. If user says hi/hello, greet politely. For other queries, use `rag_tool`. If answer not found, you only say that `This chatbot answers only using the content from your uploaded PDF.`",
         checkpointer=memory,
     )
 

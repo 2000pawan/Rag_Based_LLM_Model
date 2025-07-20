@@ -2,27 +2,216 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF Chatbot</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChatBot</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(to right, #3f0816, #69110e);
+      margin: 0;
+      padding: 20px;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+    }
+    #uploadSection {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #chatOutput {
+      border: 1px solid #a52121;
+      border-radius: 10px;
+      padding: 10px;
+      height: 400px;
+      overflow-y: auto;
+      background-color: rgba(88, 35, 104, 0.952);
+      color: #d3c0c0;
+    }
+    .message {
+      margin: 10px 0;
+      display: flex;
+    }
+    .message.user {
+      justify-content: flex-end;
+    }
+    .message.bot {
+      justify-content: flex-start;
+    }
+    .bubble {
+      padding: 10px;
+      border-radius: 15px;
+      max-width: 70%;
+    }
+    .message.user .bubble {
+      background-color: #1e0425;
+    }
+    .message.bot .bubble {
+      background-color: #a80808;
+    }
+    #questionInput {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #df1d1d;
+      border-radius: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+      color: #000;
+    }
+    .loading {
+      font-style: italic;
+      color: #555;
+    }
+
+    button {
+      padding: 8px 16px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #9500f8;
+      color: rgb(255, 0, 0);
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #6e2d25;
+    }
+
+    input[type="file"] {
+      padding: 5px;
+    }
+
+    #spinner {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .title {
+    color: #00ffe5; /* Neon cyan */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Optional: subtle shadow */
+  }
+
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #ff0000;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .footer {
+      background-color: #8b3a0a;
+      color: #07ffa0;
+      text-align: right;
+      padding: 15px 0;
+      font-size: 18px;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>📄 Chat with Your PDF</h1>
-    
-    <div class="upload-section">
-      <input type="file" id="pdfInput" accept="application/pdf" />
-      <button onclick="uploadPDF()">Upload PDF</button>
-    </div>
-    
-    <div class="chat-box" id="chatOutput"></div>
-    
-    <div class="input-section">
-      <input type="text" id="questionInput" placeholder="Ask a question..." />
-      <button onclick="askQuestion()">Ask</button>
+
+ <h1 class="title">📄 PDF CHATBOT</h1>
+
+  <div id="uploadSection">
+    <input type="file" id="pdfInput" accept="application/pdf" />
+    <button onclick="uploadPDF()">Upload PDF</button>
+    <div id="spinner">
+      <div class="loader"></div>
+      <p>Uploading PDF, please wait...</p>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <div id="chatOutput"></div>
+
+  <input type="text" id="questionInput" placeholder="Ask a question..." />
+
+  <script>
+    async function uploadPDF() {
+      const fileInput = document.getElementById("pdfInput");
+      const file = fileInput.files[0];
+      if (!file) return alert("Please select a PDF file.");
+
+      const spinner = document.getElementById("spinner");
+      spinner.style.display = "block"; // show spinner
+
+      const formData = new FormData();
+      formData.append("pdf", file);
+
+      try {
+        const res = await fetch("/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        alert(data.message);
+      } catch (err) {
+        alert("Upload failed.");
+      } finally {
+        spinner.style.display = "none"; // hide spinner
+      }
+    }
+
+    async function askQuestion() {
+      const input = document.getElementById("questionInput");
+      const question = input.value.trim();
+      if (!question) return;
+
+      input.value = "";
+      addMessage("user", question);
+      addMessage("bot", "<span class='loading'>Thinking...</span>");
+
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ question })
+      });
+
+      const data = await res.json();
+      removeLoading();
+      addMessage("bot", data.answer);
+    }
+
+    function addMessage(sender, text) {
+      const chatBox = document.getElementById("chatOutput");
+
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `message ${sender}`;
+
+      const bubble = document.createElement("div");
+      bubble.className = "bubble";
+      bubble.innerHTML = text;
+
+      msgDiv.appendChild(bubble);
+      chatBox.appendChild(msgDiv);
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeLoading() {
+      const loading = document.querySelector(".bot .loading");
+      if (loading) loading.parentElement.parentElement.remove();
+    }
+
+    document.getElementById("questionInput").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        askQuestion();
+      }
+    });
+  </script>
+
+  <footer class="footer">
+    &copy; 2025 PAWAN YADAV | AI Engineer. All rights reserved.
+  </footer>
 </body>
 </html>
