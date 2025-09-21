@@ -12,7 +12,7 @@ import os
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key=api_key)
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro",api_key=api_key,temperature=0.4)
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro",api_key=api_key,temperature=0.7 )
 memory = InMemorySaver()
 parser = StrOutputParser()
 
@@ -23,7 +23,7 @@ def process_pdf(path):
     loader = PyPDFLoader(path)
     docs = loader.load()
     text = " ".join(page.page_content for page in docs)
-    chunks = RecursiveCharacterTextSplitter(chunk_size=270).create_documents([text])
+    chunks = RecursiveCharacterTextSplitter(chunk_size=350).create_documents([text])
     return chunks
 
 
@@ -36,7 +36,7 @@ def build_agent():
     @tool
     def rag_tool(question: str) -> str:
         """Answer a question using context from the PDF."""
-        docs = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 2, "lambda_mult": 0.2}).invoke(question)
+        docs = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": 1, "lambda_mult": 0.2}).invoke(question)
         return "\n\n".join(doc.page_content for doc in docs)
 
     agent = create_react_agent(
