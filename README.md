@@ -1,4 +1,4 @@
-### RAG-Based LLM Model with FastAPI Frontend
+### RAG-Based LLM Model with FastAPI Frontend.
 
 This project implements a Retrieval-Augmented Generation (RAG) model using a FastAPI backend and a frontend built with HTML, CSS, and JavaScript. It allows users to upload PDF documents and ask questions based on the content of those documents.
 
