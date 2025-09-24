@@ -1,7 +1,9 @@
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+# from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_groq import ChatGroq
+from langchain_huggingface import HuggingFaceEmbeddings
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.prebuilt import create_react_agent
 from langchain_core.output_parsers import StrOutputParser
@@ -10,9 +12,12 @@ from langchain_core.messages import AIMessage
 from dotenv import load_dotenv
 import os
 load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
-embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key=api_key)
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro",api_key=api_key,temperature=0.7 )
+api_key = os.getenv("GROQ_API_KEY")
+# embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key=api_key)
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+# llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro",api_key=api_key,temperature=0.7 )
+llm = ChatGroq(model="qwen/qwen3-32b",temperature=0.6,reasoning_effort="default")
+
 memory = InMemorySaver()
 parser = StrOutputParser()
 
