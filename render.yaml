@@ -3,9 +3,9 @@ services:
     name: pdf-chatbot
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    startCommand: uvicorn app:app --host 0.0.0.0 --port 8000
     envVars:
       - key: PYTHON_VERSION
         value: 3.10
-      - key: GOOGLE_API_KEY
+      - key: GROQ_API_KEY
         value: ""  # Leave empty here. Set it securely in the Render Dashboard.
