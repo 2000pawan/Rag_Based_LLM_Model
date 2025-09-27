@@ -58,12 +58,30 @@ def build_agent():
             search_kwargs={"k": 1, "lambda_mult": 0.2}
         ).invoke(question)
         return "\n\n".join(doc.page_content for doc in docs)
+    tool_json_schema = [
+       {
+    "name": "rag_tool",
+    "description": "Answer questions based on the currently uploaded PDF. Files are processed temporarily and not stored after the query.",
+    "arguments": {
+        "type": "object",
+        "properties": {
+            "question": {
+                "type": "string",
+                "description": "The user's question to ask from the uploaded PDF context"
+            }
+        },
+        "required": ["question"]
+    }
+}
 
+    ]
     agent = create_react_agent(
         model=llm,
         tools=[rag_tool],
-        prompt = (
+        prompt = ("""
     "You are a helpful and professional assistant. "
+    🔧 Available tools:
+    {tool_json_schema}
     "If the user greets you (hi/hello), respond politely. "
     "For other queries, use `rag_tool` to retrieve relevant information. "
     "Summarize the `rag_tool` response and present it clearly and professionally. "
@@ -73,6 +91,12 @@ def build_agent():
     "- Bullet points for lists or key points "
     "If no relevant context is found, reply only with: "
     "`This chatbot answers only using the content from your uploaded PDF.`"
+    ====================================================================================
+    🚫 HARD RESTRICTIONS:
+    - Never hallucinate service, subservice, device, or issue.  
+    - Never call multiple tools in one turn.  
+    - Only invoke when explicit input is available.  
+    """
         ),
         checkpointer=memory,
     )
