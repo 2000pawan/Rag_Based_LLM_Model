@@ -52,6 +52,7 @@ def build_agent():
     @tool
     def rag_tool(question: str) -> str:
         """Answer a question using context from the uploaded PDF."""
+        print('==========================================rag tool=============================================================')
         docs = vector_store.as_retriever(
             search_type="mmr",
             search_kwargs={"k": 1, "lambda_mult": 0.2}
