@@ -96,6 +96,6 @@ def answer_question(question: str) -> str:
 
     if isinstance(final_message, AIMessage):
         raw_text = parser.invoke(final_message.content)
-        #return strip_markdown(raw_text)
         return raw_text
+        #return strip_markdown(raw_text)
     return "⚠️ Unexpected response format."
