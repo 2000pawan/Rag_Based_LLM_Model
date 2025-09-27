@@ -29,7 +29,7 @@ if os.path.exists(UPLOAD_FOLDER):
                 os.remove(path)
             elif os.path.isdir(path):
                 shutil.rmtree(path)
-    except Exception as e:
+    except Exception as e: 
         print(f"Warning: could not fully clear tmp: {e}")
 
 class QuestionRequest(BaseModel):
